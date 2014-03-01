@@ -8,5 +8,4 @@ org_id = "<Organization ID>"
 api_key = "<API key>"
 
 
-
-boundary.events.api.credentials(org_id,api_key)
+boundary.api.events.credentials(org_id,api_key)
