@@ -1,6 +1,11 @@
 #
 # events.py
 #
+""" API for creating Boundary Events
+"""
 
-def credentials(org_id,api_key):
-    print(org_id + ':' + api_key)
+    
+def createEvent(event):
+    """ Creates a new Boundary event from the input parameters
+    """
+    print("Sending event....Done")

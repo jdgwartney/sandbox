@@ -1,0 +1,7 @@
+This code requires that the backported Enum class be installed on your distribution of Python.
+
+In my case the following version was used:
+
+David-Gwartney-MacBook-Pro:~ davidg$ python3
+Python 3.3.4 (v3.3.4:7ff62415e426, Feb  9 2014, 00:29:34) 
+[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
