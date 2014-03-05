@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-import boundary.api.events
+import boundary.api.events as events
 
 
 
-myOrganizationID = "<Organization ID>"
-myApiKey = "<API key>"
+myOrganizationID = '3ehRi7uZeeaTN12dErF5XOnRXjC'
+myApiKey = 'ARI0PzUzWYUo7GG1OxiHmABTpr9'
+myFingerprintField = '@title'
+myTitle = 'My shiny new event'
+mySource = 'boundary API'
 
 
-boundary.api.events.createEvent(organizationID=myOrganizationID,apiKey=myApiKey)
+events.createEvent(myOrganizationID,myApiKey,myFingerprintField,mySource,myTitle)

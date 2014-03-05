@@ -27,6 +27,7 @@ def main():
         print(name, member)
     print(type(EventSeverity))
     print(type(EventSeverity['CRITICAL']))
+    print(EventSeverity.INFO)
 
     
 if __name__ == '__main__':
