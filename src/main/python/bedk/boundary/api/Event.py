@@ -12,12 +12,25 @@ class SEVERITY(Enum):
         WARN = 'WARN'
         ERROR = 'ERROR'
         CRITICAL = 'CRITICAL'
-        
+
+"""
+"""
 class STATUS(Enum):
         OPEN = 'OPEN'
         CLOSED = 'CLOSED'
         ACKNOWLEDGED = 'ACKNOWLEDGED'
         OK = 'OK'
+        
+class RAW_EVENT(Enum):
+    ID = 'id'
+    ORGANIZATION_ID = 'organizationID'
+    SEVERITY = 'severity'
+    SOURCE = 'source'
+    SENDER = 'sender'
+
+
+    __ORGANIZATION_ID_LENGTH = 27
+
 
 class Event(object):
     '''
@@ -49,12 +62,13 @@ class Event(object):
     #
     __DEFAULT_ORGANIZATION_ID = None
     __DEFAULT_SEVERITY = SEVERITY.INFO
-#    __DEFAULT_SOURCE = ''
+    __DEFAULT_SOURCE = 'Boundary Event API Testing'
     __DEFAULT_SENDER = None
     __DEFAULT_PROPERTIES = None
     __DEFAULT_STATUS = STATUS.OK
-#    __DEFAULT_FINGERPRINT_FIELDS = ''
+    __DEFAULT_FINGERPRINT_FIELDS = None
     __DEFAULT_TAGS = None
+    __DEFAULT_TITLE = None
     __DEFAULT_MESSAGE = None
     __DEFAULT_CREATED_AT = None
     __DEFAULT_RECEIVED_AT = None
@@ -76,6 +90,14 @@ class Event(object):
                  eventId =__DEFAULT_EVENT_ID):
         """
         Constructor
+        
+        Required Parameters:
+            source
+            fingerprintFields
+            title
+            
+        Optional Parameters:
+            TODO: Complete documentation
         """
         self.__organizationID = organizationID
         self.__severity = severity
@@ -89,7 +111,23 @@ class Event(object):
         self.__message = message
         self.__createdAt = createdAt
         self.__receivedAt = receivedAt
-        
+    
+    @staticmethod
+    def validateOrganizationalID(organizationID):
+        """
+        validateOrganizationID -> Bool
+        Checks to see if the organizational ID is of the correct format
+        Returns:
+            True - organizational id is valid
+            False - organization id is invalid
+            
+        NOTE: Defining this method as static because might be useful in other areas
+        """
+        # TODO: This should be elsewheres
+        __ORGANIZATION_ID_LENGTH = 27
+
+        return len(organizationID) == __ORGANIZATION_ID_LENGTH
+    
     @property
     def organizationID(self):
         return self.__organizationID
@@ -103,7 +141,11 @@ class Event(object):
         
         The associated organization id for this event. If not specified, organization id will be populated from the URI.
         """
-        self.__organizationID=organizationID
+        if (Event.validateOrganizationalID(organizationID) == True):
+            self.__organizationID=organizationID
+        else:
+            print("raise ValueError")
+            raise ValueError
     
     @property
     def severity(self):
@@ -241,6 +283,10 @@ class Event(object):
     @eventId.setter
     def eventId(self,eventId):
         self.__eventId = eventId
+    
+    @staticmethod
+    def getEvent():
+        return Event(Event.__DEFAULT_SOURCE,Event.__DEFAULT_FINGERPRINT_FIELDS,Event.__DEFAULT_TITLE)
         
 
     

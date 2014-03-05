@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import boundary.api.events as events
+import boundary.api.Event as events
 
 
 
