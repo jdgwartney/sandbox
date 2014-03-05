@@ -4,8 +4,8 @@ import boundary.api.events
 
 
 
-org_id = "<Organization ID>"
-api_key = "<API key>"
+myOrganizationID = "<Organization ID>"
+myApiKey = "<API key>"
 
 
-boundary.api.events.createEvent("event")
+boundary.api.events.createEvent(organizationID=myOrganizationID,apiKey=myApiKey)
