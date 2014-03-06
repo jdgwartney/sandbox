@@ -1,39 +1,41 @@
-'''
+"""
 Created on Mar 3, 2014
 
 @author: davidg
-'''
+"""
 
-# TODO: The original python 2.7.x module urllib2 feature set has been absorbed into urllib in python 3.x
+
 import requests
-import base64
+from requests.auth import HTTPBasicAuth
+import json
+import random
+import platform
 
 class EventConnection(object):
     '''
-    Handles the interacation with the Boundary Server REST API.
+    Handles the interaction with the Boundary Server REST API.
     '''
+    
+    # Define our event path for the REST calls
     __DEFAULT_EVENT_PATH='events'
     def __init__(self,apiHost,apiKey,organizationID):
         '''
         Constructor
+        
         '''
         self.__apiHost = apiHost
         self.__apiKey = apiKey
         self.__organizationID = organizationID
         # Generate our URI
-        self.__buildURI()
-        self.___encodeApiKey()
+        self.__headers = {'Content-Type': 'application/json'}
+        self.__authorization = HTTPBasicAuth(self.__apiKey, '')
+        self.__uri = 'https://{0}/{1}/{2}'.format(self.__apiHost,self.__organizationID,self.__DEFAULT_EVENT_PATH)
+
         
     @property
     def apiHost(self):
         return self.__apiHost
-    
-    @apiHost.setter
-    def apiHost(self,apiHost):
-        self.__apiHost = apiHost
-        # API host has changed rebuild the URI
-        self.__uri = self.__buildURI()
-    
+        
     @property
     def apiKey(self):
         return self.__apiKey
@@ -42,35 +44,39 @@ class EventConnection(object):
     def organizationID(self):
         """
         This ends up being the default organization ID unless it
-        is overidden by the organization ID in the event itself.
+        is overridden by the organization ID in the event itself.
         """
         return self.__organizationID
 
-    def __buildURI(self):
-        """
-        Generate the URI required for the REST call
-        """
-        #
-        # Format the URI
-        #
-        uri = 'https://{0}/{1}/{2}'.format(self.__apiHost,self.__organizationID,self.__DEFAULT_EVENT_PATH)
-        return uri
     
-    def __encodeApiKey(self):
-        # TODO: Way that makes this clear
-        auth = ':' + self.__apiKey
-        auth = auth.replace('\n','')
-        base64Auth = base64.encodestring(auth.encode())
-        base64AuthStr = str(base64Auth)
-        self.__authorization =  'Basic {0}'.format(str(base64Auth))
-        print(self.__authorization)
-            
+    def getEvent(self):
+        myMessage = str('test' + str(random.random()))
+        myTitle = "Boundary API Event Test"
+        myHost = platform.node()
+        event = {"title": myTitle,
+                 "message": myMessage,
+                 "tags": ["example", "test", "stuff"],
+                 "fingerprintFields": ["@title"],
+                 "source": { "ref": myHost,"type": "host"}
+                 }
+        return event
+
     def sendEvent(self,event):
         """
         sendEvent(self,event) -> String
-        """
         
-        return None
+        
+        """
+        event = self.getEvent()
+        #
+        # TODO: What kind of errors can this through??
+        r = requests.post(self.__uri,data=json.dumps(event), headers=self.__headers,auth=self.__authorization)
+        # TODO: Defined constant for HTTP headers like location
+        # The HTTP Response header 'Location'
+        location = str(r.headers['Location'])
+        eventID = location.split('/',6)[5]
+
+        return eventID
     
     
         
