@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import boundary.api.Event as events
+from boundary.api.events import createEvent
 
 
 
@@ -11,4 +11,4 @@ myTitle = 'My shiny new event'
 mySource = 'boundary API'
 
 
-events.createEvent(myOrganizationID,myApiKey,myFingerprintField,mySource,myTitle)
+createEvent(myOrganizationID,myApiKey,myFingerprintField,mySource,myTitle)

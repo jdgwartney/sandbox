@@ -4,6 +4,7 @@ Created on Mar 4, 2014
 @author: davidg
 '''
 from enum import Enum
+import json
 """
 Define class the enumerates each of the values for severity
 """
@@ -287,6 +288,26 @@ class Event(object):
     @staticmethod
     def getEvent():
         return Event(Event.__DEFAULT_SOURCE,Event.__DEFAULT_FINGERPRINT_FIELDS,Event.__DEFAULT_TITLE)
+    
+    
+    
+    
+    def __eventToJson(self):
+        event = {'source': {"type": "host", "ref": self.__source},
+                 'sender': {"type": self.__sender, "ref": self.__sender},
+                 'properties': {"sender": self.__sender,
+                                "source": self.__source,
+                            },
+                 'title': self.__title,
+                 'createdAt': self.__createdAt,
+                 'message': self.__message,
+                 'severity': self.__severity,
+                 'status': self.__status,
+                 'tags': [self.__source, self.__sender, self.__severity],
+                 'fingerprintFields': ['source', 'sender']
+                 }
+        return
+
         
 
     

@@ -3,9 +3,9 @@ Created on Mar 3, 2014
 
 @author: davidg
 '''
-import json
+
 # TODO: The original python 2.7.x module urllib2 feature set has been absorbed into urllib in python 3.x
-import urllib
+import requests
 import base64
 
 class EventConnection(object):
@@ -22,6 +22,7 @@ class EventConnection(object):
         self.__organizationID = organizationID
         # Generate our URI
         self.__buildURI()
+        self.___encodeApiKey()
         
     @property
     def apiHost(self):
@@ -55,11 +56,21 @@ class EventConnection(object):
         uri = 'https://{0}/{1}/{2}'.format(self.__apiHost,self.__organizationID,self.__DEFAULT_EVENT_PATH)
         return uri
     
+    def __encodeApiKey(self):
+        # TODO: Way that makes this clear
+        auth = ':' + self.__apiKey
+        auth = auth.replace('\n','')
+        base64Auth = base64.encodestring(auth.encode())
+        base64AuthStr = str(base64Auth)
+        self.__authorization =  'Basic {0}'.format(str(base64Auth))
+        print(self.__authorization)
+            
     def sendEvent(self,event):
         """
         sendEvent(self,event) -> String
         """
-        return ''
+        
+        return None
     
     
         

@@ -14,33 +14,33 @@ from boundary.api.EventConnection import EventConnection
 import unittest
 
 # TODO: Let the Event class handle this, remove later
-# """
-# Define severity values
-# """
-# class SEVERITY(Enum):
-#     INFO = 'INFO'
-#     WARN = 'WARN'
-#     ERROR = 'ERROR'
-#     CRITICAL = 'CRITICAL'
-# 
-# """
-# Define status values
-# """
-# class STATUS(Enum):
-#     OPEN = 'OPEN'
-#     CLOSED = 'CLOSED'
-#     ACKNOWLEDGED = 'ACKNOWLEDGED'
-#     OK = 'OK' 
-
-# """
-# Define fields of our RawEvents
-# """
-# class RawEvent(Enum):
-#     ID = 'id'
-#     ORGANIZATION_ID = 'organizationID'
-#     SEVERITY = 'severity'
-#     SOURCE = 'source'
-#     SENDER = 'sender'
+"""
+Define severity values
+"""
+class SEVERITY(Enum):
+    INFO = 'INFO'
+    WARN = 'WARN'
+    ERROR = 'ERROR'
+    CRITICAL = 'CRITICAL'
+ 
+"""
+Define status values
+"""
+class STATUS(Enum):
+    OPEN = 'OPEN'
+    CLOSED = 'CLOSED'
+    ACKNOWLEDGED = 'ACKNOWLEDGED'
+    OK = 'OK' 
+ 
+"""
+Define fields of our RawEvents
+"""
+class RawEvent(Enum):
+    ID = 'id'
+    ORGANIZATION_ID = 'organizationID'
+    SEVERITY = 'severity'
+    SOURCE = 'source'
+    SENDER = 'sender'
     
 
 
@@ -154,12 +154,16 @@ def createEvent(organizationID,
               createdAt,
               receivedAt)
     
-    theConnection = EventConnection(apiHost,apiKey)
+    theConnection = EventConnection(apiHost,
+                                    apiKey,
+                                    organizationID)
+    
+    theConnection.sendEvent(theEvent)
 
     
-    json = __eventToJSON(event)
-    uri = __buildURI(__DEFAULT_API_HOST,organizationID,__DEFAULT_EVENT_PATH)
-    eventID = __sendEvent(uri,json)
+#     json = __eventToJSON(event)
+#     uri = __buildURI(__DEFAULT_API_HOST,organizationID,__DEFAULT_EVENT_PATH)
+#     eventID = __sendEvent(uri,json)
 
 def __event(organizationID,
                 apiKey,
