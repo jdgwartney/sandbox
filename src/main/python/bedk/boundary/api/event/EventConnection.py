@@ -69,12 +69,12 @@ class EventConnection(object):
         
         
         """
-#        event = self.getEvent()
+        event = self.getEvent()
         
 
         #
         # TODO: What kind of errors can this through??
-        r = requests.post(self.__uri,data=json.dumps(event.eventToJson()), headers=self.__headers,auth=self.__authorization)
+        r = requests.post(self.__uri,data=json.dumps(event), headers=self.__headers,auth=self.__authorization)
         # TODO: Defined constant for HTTP headers like location
         # The HTTP Response header 'Location'
         location = str(r.headers['Location'])
