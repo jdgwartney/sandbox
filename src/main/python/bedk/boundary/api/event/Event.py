@@ -102,11 +102,11 @@ class Event(object):
     # place. Make them private members by the "__"
     #
     __DEFAULT_ORGANIZATION_ID = None
-    __DEFAULT_SEVERITY = SEVERITY.INFO
+    __DEFAULT_SEVERITY = SEVERITY.INFO.value
     __DEFAULT_SOURCE = 'Boundary Event API Testing'
     __DEFAULT_SENDER = None
     __DEFAULT_PROPERTIES = None
-    __DEFAULT_STATUS = STATUS.OK
+    __DEFAULT_STATUS = STATUS.OK.value
     __DEFAULT_FINGERPRINT_FIELDS = None
     __DEFAULT_TAGS = None
     __DEFAULT_TITLE = None
@@ -140,18 +140,6 @@ class Event(object):
         Optional Parameters:
             TODO: Complete documentation
         """
-        self.__organizationID = organizationID
-        self.__severity = severity
-        self.__source = source
-        self.__sender = sender
-        self.__properties = properties
-        self.__status = status
-        self.__fingerprintFields = fingerprintFields
-        self.__tags = tags
-        self.__title = title
-        self.__message = message
-        self.__createdAt = createdAt
-        self.__receivedAt = receivedAt
         
         #
         # Create a dictionary of the values
@@ -188,7 +176,6 @@ class Event(object):
     
     @property
     def organizationID(self):
-#         return self.__organizationID
         return self.__event[RAW_EVENT.ORGANIZATION_ID.value]
     
     @organizationID.setter
@@ -202,6 +189,7 @@ class Event(object):
         """
         
         self.__event[RAW_EVENT.ORGANIZATION_ID.value] = organizationID
+# TODO: Additional validation of organization ID
 #         if (Event.validateOrganizationalID(organizationID) == True):
 #             self.__organizationID=organizationID
 #         else:
@@ -211,6 +199,7 @@ class Event(object):
     @organizationID.deleter
     def organizationID(self):
         """
+        TODO: Roll out to the other attributes??
         """
         raise AttributeError("Cannot delete the organizationID attribute")
     
@@ -219,22 +208,23 @@ class Event(object):
         """
         severity accessor
         """
-        return self.__severity
+        return self.__event[RAW_EVENT.SEVERITY.value]
     
     @severity.setter
     def severity(self,severity):
         """
         One of INFO, WARN, ERROR, CRITICAL. Default is INFO.
         """
-        self.__severity = severity
+        self.__event[RAW_EVENT.SEVERITY.value] = severity
         
     @property
     def source(self):
-        return self.__source
+        return self.__event[RAW_EVENT.SOURCE.value]
+
     
     @source.setter
     def source(self,source):
-        self.__source = source
+        self.__event[RAW_EVENT.SOURCE.value] = source
     
     @property
     def sender(self):
@@ -243,23 +233,23 @@ class Event(object):
         OPEN, CLOSED, or ACKNOWLEDGED are able to be modified by the user,
         while OK status events are purely informational.
         """
-        return self.__sender
+        return self.__event[RAW_EVENT.SENDER.value]
     
     @sender.setter
     def sender(self,sender):
-        self.__sender = sender
+        self.__event[RAW_EVENT.SENDER.value] = sender
         
     @property
     def properties(self):
-        return self.__properties
+        return self.__event[RAW_EVENT.PROPERTIES.value]
     
     @properties.setter
     def properties(self,properties):
-        self.__properties = properties
+        self.__event[RAW_EVENT.PROPERTIES.value] = properties
         
     @property
     def status(self):
-        return self.__status
+        return self.__event[RAW_EVENT.STATUS.value]
     
     @status.setter
     def status(self,status):
@@ -268,11 +258,11 @@ class Event(object):
         Events with status OPEN, CLOSED,or ACKNOWLEDGED are able
         to be modified by the user, while OK status events are purely informational.
         """
-        self.__status = status
+        self.__event[RAW_EVENT.STATUS.value] = status
     
     @property
     def fingerprintFields(self):
-        return self.__fingerprintFields
+        return self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value]
     
     @fingerprintFields.setter
     def fingerprintFields(self,fingerprintFields):
@@ -283,7 +273,7 @@ class Event(object):
         from the properties object. Each field must have a non-null,
         non-empty field value with a basic type (string, number, or bool).
         """
-        self.__fingerprintFields = fingerprintFields
+        self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value] = fingerprintFields
         
     @property
     def tags(self):
@@ -303,55 +293,55 @@ class Event(object):
         """
         Description of the event. Maximum 255 characters.
         """
-        return self.__title
+        return self.__event[RAW_EVENT.TITLE.value]
     
     @title.setter
     def title(self,title):
-        self.__title = title
+        self.__event[RAW_EVENT.TITLE.value] = title
     
     @property
     def message(self):
         """
         Additional description of the event. Maximum 255 characters.
         """
-        return self.__message
+        return self.__event[RAW_EVENT.MESSAGE.value]
     
     @message.setter
     def message(self,message):
-        self.__message = message
+        self.__event[RAW_EVENT.MESSAGE.value] = message
         
     @property
     def createdAt(self):
         """
         The timestamp the event was created. If not specified, this is set to the time the event is received.
         """
-        return self.__createdAt
+        return self.__event[RAW_EVENT.CREATED_AT.value]
     
     @createdAt.setter
     def createdAt(self,createdAt):
-        self.__createdAt = createdAt
+        self.__event[RAW_EVENT.CREATED_AT.value] = createdAt
         
     @property
     def receivedAt(self):
         """
         The timestamp the event was received.
         """
-        return self.__receivedAt
+        return self.__event[RAW_EVENT.RECEIVED_AT.value]
     
     @receivedAt.setter
     def receivedAt(self,receivedAt):
-        self.__receivedAt = receivedAt
+        self.__event[RAW_EVENT.RECEIVED_AT.value] = receivedAt
         
     @property
     def eventId(self):
         """
         The id of the Event this raw event was de-duplicated to.
         """
-        return self.__eventId
+        return self.__event[RAW_EVENT.EVENT_ID.value]
     
     @eventId.setter
     def eventId(self,eventId):
-        self.__eventId = eventId
+        self.__event[RAW_EVENT.EVENT_ID.value] = eventId
     
     @staticmethod
     def getEvent():
@@ -364,24 +354,7 @@ class Event(object):
     
     def __str__(self):
         return str(self.__event)
-    
-    def eventToJson(self):
-            
-        event = {'source': {"type": "host", "ref": self.__source},
-                 'sender': {"type": self.__sender, "ref": self.__sender},
-                 'properties': {"sender": self.__sender,
-                                "source": self.__source,
-                            },
-                 'title': self.__title,
-                 'createdAt': self.__createdAt,
-                 'message': self.__message,
-                 'severity': self.__severity,
-                 'status': self.__status,
-                 'tags': [self.__source, self.__sender, self.__severity],
-                 'fingerprintFields': ['source', 'sender']
-                 }
-        return event
-    
+        
     def getActiveFields(self):
         """
         Extract the active fields from our list of fields
