@@ -5,6 +5,10 @@ Created on Mar 4, 2014
 '''
 from enum import Enum
 import json
+
+#
+# TODO: Rethink the use of the enumerated types in the Event class for identifying fields
+#
 """
 Define class the enumerates each of the values for severity
 """
@@ -78,19 +82,19 @@ class Event(object):
     # Define severity values that can be reference
     # through an Event object
     #
-    CRITICAL = SEVERITY.CRITICAL
-    INFO = SEVERITY.INFO
-    ERROR = SEVERITY.ERROR
-    WARN = SEVERITY.WARN
+    CRITICAL = SEVERITY.CRITICAL.value
+    INFO = SEVERITY.INFO.value
+    ERROR = SEVERITY.ERROR.value
+    WARN = SEVERITY.WARN.value
     
     #
     # Define status values that can be reference
     # through an Event object
     #
-    OPEN = STATUS.OPEN
-    CLOSED = STATUS.CLOSED
-    ACKNOWLEDGED = STATUS.ACKNOWLEDGED
-    OK = STATUS.OK
+    OPEN = STATUS.OPEN.value
+    CLOSED = STATUS.CLOSED.value
+    ACKNOWLEDGED = STATUS.ACKNOWLEDGED.value
+    OK = STATUS.OK.value
     
     #
     # Define our default values for fields
@@ -153,18 +157,18 @@ class Event(object):
         # Create a dictionary of the values
         #
         self.__event ={}
-        self.__event[RAW_EVENT.ORGANIZATION_ID] = organizationID
-        self.__event[RAW_EVENT.SEVERITY] = severity
-        self.__event[RAW_EVENT.SOURCE] = source
-        self.__event[RAW_EVENT.SENDER] = sender
-        self.__event[RAW_EVENT.PROPERTIES] = properties
-        self.__event[RAW_EVENT.STATUS] = status
-        self.__event[RAW_EVENT.FINGERPRINT_FIELDS] = fingerprintFields
-        self.__event[RAW_EVENT.TAGS] = tags
-        self.__event[RAW_EVENT.TITLE] = title
-        self.__event[RAW_EVENT.MESSAGE] = message
-        self.__event[RAW_EVENT.CREATED_AT] = createdAt
-        self.__event[RAW_EVENT.RECEIVED_AT] = receivedAt
+        self.__event[RAW_EVENT.ORGANIZATION_ID.value] = organizationID
+        self.__event[RAW_EVENT.SEVERITY.value] = severity
+        self.__event[RAW_EVENT.SOURCE.value] = source
+        self.__event[RAW_EVENT.SENDER.value] = sender
+        self.__event[RAW_EVENT.PROPERTIES.value] = properties
+        self.__event[RAW_EVENT.STATUS.value] = status
+        self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value] = fingerprintFields
+        self.__event[RAW_EVENT.TAGS.value] = tags
+        self.__event[RAW_EVENT.TITLE.value] = title
+        self.__event[RAW_EVENT.MESSAGE.value] = message
+        self.__event[RAW_EVENT.CREATED_AT.value] = createdAt
+        self.__event[RAW_EVENT.RECEIVED_AT.value] = receivedAt
    
     @staticmethod
     def validateOrganizationalID(organizationID):
@@ -185,7 +189,7 @@ class Event(object):
     @property
     def organizationID(self):
 #         return self.__organizationID
-        return self.__event[RAW_EVENT.ORGANIZATION_ID]
+        return self.__event[RAW_EVENT.ORGANIZATION_ID.value]
     
     @organizationID.setter
     def organizationID(self,organizationID):
@@ -197,7 +201,7 @@ class Event(object):
         The associated organization id for this event. If not specified, organization id will be populated from the URI.
         """
         
-        self.__event[RAW_EVENT.ORGANIZATION_ID] = organizationID
+        self.__event[RAW_EVENT.ORGANIZATION_ID.value] = organizationID
 #         if (Event.validateOrganizationalID(organizationID) == True):
 #             self.__organizationID=organizationID
 #         else:
@@ -287,11 +291,11 @@ class Event(object):
         tags accessor
         """
 #         return self.__tags
-        return self.__event[RAW_EVENT.TAGS]
+        return self.__event[RAW_EVENT.TAGS.value]
         
     @tags.setter
     def tags(self, tags):
-        self.__event[RAW_EVENT.TAGS] = tags
+        self.__event[RAW_EVENT.TAGS.value] = tags
         
         
     @property
@@ -387,7 +391,6 @@ class Event(object):
             if self.__event[f] != None:
                 e[f] = self.__event[f]
         return e
-                
 
 
         

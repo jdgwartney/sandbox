@@ -10,6 +10,7 @@ from requests.auth import HTTPBasicAuth
 import json
 import platform
 from datetime import datetime
+from boundary.api.event import Event
 
 class EventConnection(object):
     '''
@@ -81,6 +82,23 @@ class EventConnection(object):
         eventID = location.split('/',6)[5]
 
         return eventID
+    
+def dumpDict(e):
+    for f in e.keys():
+        print('key: {0}, key_type: {1}, value: {2}, type: {3}'.format(f,type(f),e[f],type(e[f])))
+    
+def debug():
+    c = EventConnection('foo','bar')
+    d = c.getEvent()
+    event = Event.getEvent()
+    
+    dumpDict(event.getActiveFields())
+    
+#     dumpDict(d)
+#     print(json.dumps(d))
+    
+if __name__ == '__main__':
+    debug()
     
     
         
