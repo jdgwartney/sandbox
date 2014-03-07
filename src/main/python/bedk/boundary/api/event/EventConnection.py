@@ -64,42 +64,23 @@ class EventConnection(object):
                  }
         return event
 
-    def sendEvent(self,event):
+    def createEvent(self,event):
         """
         sendEvent(self,event) -> String
-        
-        
         """
-        event = self.getEvent()
-        
 
         #
-        # TODO: What kind of errors can this through??
-        r = requests.post(self.__uri,data=json.dumps(event), headers=self.__headers,auth=self.__authorization)
+        # TODO: What kind of errors can this through?? Add handling for errors
+        #
+        r = requests.post(self.__uri,data=json.dumps(event.getActiveFields()), headers=self.__headers,auth=self.__authorization)
+        print('HTTP Status Code: ' + str(r.status_code))
         # TODO: Defined constant for HTTP headers like location
         # The HTTP Response header 'Location'
         location = str(r.headers['Location'])
         eventID = location.split('/',6)[5]
 
         return eventID
-    
-def dumpDict(e):
-    for f in e.keys():
-        print('key: {0}, key_type: {1}, value: {2}, type: {3}'.format(f,type(f),e[f],type(e[f])))
-    
-def debug():
-    c = EventConnection('foo','bar')
-    d = c.getEvent()
-    event = Event.getEvent()
-    
-    dumpDict(event.getActiveFields())
-    
-#     dumpDict(d)
-#     print(json.dumps(d))
-    
-if __name__ == '__main__':
-    debug()
-    
+
     
         
         

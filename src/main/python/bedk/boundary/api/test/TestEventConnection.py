@@ -17,14 +17,9 @@ class TestEventConnection(TestEventAPI):
         self.organizationID = '3ehRi7uZeeaTN12dErF5XOnRXjC'
         self.apiKey = 'ARI0PzUzWYUo7GG1OxiHmABTpr9'
         self.apiHost = 'api.boundary.com'
-        self.source = 'Boundary Event API'
-        self.fingerprintFields = '@title'
-        self.title = 'Boundary API Event'
 
-        self.myEvent = Event(self.source,
-                        self.fingerprintFields,
-                        self.title)
 
+        
     def tearDown(self):
         pass
     
@@ -32,9 +27,10 @@ class TestEventConnection(TestEventAPI):
         # Create our Boundary Event Connection
         connection = EventConnection(self.apiKey,
                                      self.organizationID)
+        event = Event.getDefaultEvent()
          
         #Send an event to the Boundary Server using the Boundary REST API
-        eventID = connection.sendEvent(self.myEvent.getActiveFields())
+        eventID = connection.createEvent(event)
         self.assertIsNotNone(eventID,'Check for returned event ID')
 
 

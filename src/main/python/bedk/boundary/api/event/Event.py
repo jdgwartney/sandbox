@@ -107,9 +107,9 @@ class Event(object):
     __DEFAULT_SENDER = None
     __DEFAULT_PROPERTIES = None
     __DEFAULT_STATUS = STATUS.OK.value
-    __DEFAULT_FINGERPRINT_FIELDS = None
+    __DEFAULT_FINGERPRINT_FIELDS = ['@title']
     __DEFAULT_TAGS = None
-    __DEFAULT_TITLE = None
+    __DEFAULT_TITLE = 'Boundary Event API Event'
     __DEFAULT_MESSAGE = None
     __DEFAULT_CREATED_AT = None
     __DEFAULT_RECEIVED_AT = None
@@ -344,7 +344,7 @@ class Event(object):
         self.__event[RAW_EVENT.EVENT_ID.value] = eventId
     
     @staticmethod
-    def getEvent():
+    def getDefaultEvent():
         return Event(Event.__DEFAULT_SOURCE,
                      Event.__DEFAULT_FINGERPRINT_FIELDS,
                      Event.__DEFAULT_TITLE)
@@ -360,10 +360,20 @@ class Event(object):
         Extract the active fields from our list of fields
         """
         e = {}
+        #
+        # Explictly add the required fields
+        #
+        e[RAW_EVENT.SOURCE.value] = self.__event[RAW_EVENT.SOURCE.value]
+        e[RAW_EVENT.FINGERPRINT_FIELDS.value] = self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value]
+        e[RAW_EVENT.TITLE.value] = self.__event[RAW_EVENT.TITLE.value]
+        
         for f in self.__event.keys():
             if self.__event[f] != None:
                 e[f] = self.__event[f]
+                
+        print(json.dumps(e))
         return e
+
 
 
         
