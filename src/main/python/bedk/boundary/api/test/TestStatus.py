@@ -4,9 +4,10 @@ Created on Mar 4, 2014
 @author: davidg
 '''
 import unittest
+from boundary.api.test import TestEventAPI
 
 
-class Test(unittest.TestCase):
+class Test(TestEventAPI):
 
 
     def setUp(self):

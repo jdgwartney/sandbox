@@ -8,20 +8,22 @@ Created on Mar 3, 2014
 import requests
 from requests.auth import HTTPBasicAuth
 import json
-import random
 import platform
+from datetime import datetime
 
 class EventConnection(object):
     '''
     Handles the interaction with the Boundary Server REST API.
     '''
     
+    # Default API host if none is specified
+    __DEFAULT_API_HOST='api.boundary.com'
+    
     # Define our event path for the REST calls
     __DEFAULT_EVENT_PATH='events'
-    def __init__(self,apiHost,apiKey,organizationID):
+    def __init__(self,apiKey,organizationID,apiHost=__DEFAULT_API_HOST):
         '''
         Constructor
-        
         '''
         self.__apiHost = apiHost
         self.__apiKey = apiKey
@@ -50,13 +52,13 @@ class EventConnection(object):
 
     
     def getEvent(self):
-        myMessage = str('test' + str(random.random()))
+        myMessage = str('test @' + str(datetime.now()))
         myTitle = "Boundary API Event Test"
         myHost = platform.node()
         event = {"title": myTitle,
                  "message": myMessage,
                  "tags": ["example", "test", "stuff"],
-                 "fingerprintFields": ["@title"],
+                 "fingerprintFields": ["@message"],
                  "source": { "ref": myHost,"type": "host"}
                  }
         return event
@@ -67,10 +69,12 @@ class EventConnection(object):
         
         
         """
-        event = self.getEvent()
+#        event = self.getEvent()
+        
+
         #
         # TODO: What kind of errors can this through??
-        r = requests.post(self.__uri,data=json.dumps(event), headers=self.__headers,auth=self.__authorization)
+        r = requests.post(self.__uri,data=json.dumps(event.eventToJson()), headers=self.__headers,auth=self.__authorization)
         # TODO: Defined constant for HTTP headers like location
         # The HTTP Response header 'Location'
         location = str(r.headers['Location'])

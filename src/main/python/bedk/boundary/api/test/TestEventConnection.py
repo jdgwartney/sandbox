@@ -5,11 +5,12 @@ Created on Mar 5, 2014
 '''
 import unittest
 
-from boundary.api.EventConnection import EventConnection
-from boundary.api.Event import Event
+from boundary.api.event import EventConnection
+from boundary.api.event import Event
+from boundary.api.test import TestEventAPI
 
 
-class Test(unittest.TestCase):
+class TestEventConnection(TestEventAPI):
 
 
     def setUp(self):
@@ -24,22 +25,16 @@ class Test(unittest.TestCase):
                         self.fingerprintFields,
                         self.title)
 
-
     def tearDown(self):
-        pass
-
-
-    def testName(self):
         pass
     
     def testSendEvent(self):
         # Create our Boundary Event Connection
-        connection = EventConnection(self.apiHost,
-                                     self.apiKey,
+        connection = EventConnection(self.apiKey,
                                      self.organizationID)
          
         #Send an event to the Boundary Server using the Boundary REST API
-        eventID = connection.sendEvent(self.myEvent)
+        eventID = connection.sendEvent(self.myEvent.getActiveFields())
         self.assertIsNotNone(eventID,'Check for returned event ID')
 
 

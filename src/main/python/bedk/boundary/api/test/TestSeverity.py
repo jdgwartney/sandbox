@@ -4,7 +4,7 @@ Created on Mar 4, 2014
 @author: davidg
 '''
 import unittest
-from boundary.api.events import SEVERITY
+from boundary.api.event import SEVERITY
 
 class TestSeverity(unittest.TestCase):
 

@@ -21,14 +21,50 @@ class STATUS(Enum):
         CLOSED = 'CLOSED'
         ACKNOWLEDGED = 'ACKNOWLEDGED'
         OK = 'OK'
-        
+
+"""
+Enumeration Class that defines all
+of the fields of a RAW_EVENT
+"""
 class RAW_EVENT(Enum):
     ID = 'id'
     ORGANIZATION_ID = 'organizationID'
     SEVERITY = 'severity'
     SOURCE = 'source'
     SENDER = 'sender'
+    PROPERTIES = 'properties'
+    STATUS = 'status'
+    FINGERPRINT_FIELDS = 'fingerprintFields'
+    TAGS = 'tags'
+    TITLE = 'title'
+    MESSAGE = 'message'
+    CREATED_AT = 'createdAt'
+    RECEIVED_AT = 'receivedAt'
+    EVENT_ID = 'eventId'
 
+
+"""
+Enumeration Class that defines all
+of the fields of an EVENT
+"""
+class EVENT(Enum):
+    ID = 'id'
+    ORGANIZATION_ID = 'organizationID'
+    SEVERITY = 'severity'
+    SOURCE = 'source'
+    SENDER = 'sender'
+    PROPERTIES = 'properties'
+    STATUS = 'status'
+    FINGERPRINT_FIELDS = 'fingerprintFields'
+    TAGS = 'tags'
+    TITLE = 'title'
+    MESSAGE = 'message'
+    TIMES_SEEN = 'timesSeen'
+    FIRST_SEEN_AT = 'firstSeenAt'
+    LAST_SEEN_AT = 'lastSeenAt'
+    LAST_UPDATE_AT = 'lastUpdatedAt'
+    RELATED_SOURCES = 'relatedSources'
+ 
 
     __ORGANIZATION_ID_LENGTH = 27
 
@@ -112,7 +148,24 @@ class Event(object):
         self.__message = message
         self.__createdAt = createdAt
         self.__receivedAt = receivedAt
-    
+        
+        #
+        # Create a dictionary of the values
+        #
+        self.__event ={}
+        self.__event[RAW_EVENT.ORGANIZATION_ID] = organizationID
+        self.__event[RAW_EVENT.SEVERITY] = severity
+        self.__event[RAW_EVENT.SOURCE] = source
+        self.__event[RAW_EVENT.SENDER] = sender
+        self.__event[RAW_EVENT.PROPERTIES] = properties
+        self.__event[RAW_EVENT.STATUS] = status
+        self.__event[RAW_EVENT.FINGERPRINT_FIELDS] = fingerprintFields
+        self.__event[RAW_EVENT.TAGS] = tags
+        self.__event[RAW_EVENT.TITLE] = title
+        self.__event[RAW_EVENT.MESSAGE] = message
+        self.__event[RAW_EVENT.CREATED_AT] = createdAt
+        self.__event[RAW_EVENT.RECEIVED_AT] = receivedAt
+   
     @staticmethod
     def validateOrganizationalID(organizationID):
         """
@@ -131,7 +184,8 @@ class Event(object):
     
     @property
     def organizationID(self):
-        return self.__organizationID
+#         return self.__organizationID
+        return self.__event[RAW_EVENT.ORGANIZATION_ID]
     
     @organizationID.setter
     def organizationID(self,organizationID):
@@ -142,11 +196,19 @@ class Event(object):
         
         The associated organization id for this event. If not specified, organization id will be populated from the URI.
         """
-        if (Event.validateOrganizationalID(organizationID) == True):
-            self.__organizationID=organizationID
-        else:
-            print("raise ValueError")
-            raise ValueError
+        
+        self.__event[RAW_EVENT.ORGANIZATION_ID] = organizationID
+#         if (Event.validateOrganizationalID(organizationID) == True):
+#             self.__organizationID=organizationID
+#         else:
+#             print("raise ValueError")
+#             raise ValueError
+        
+    @organizationID.deleter
+    def organizationID(self):
+        """
+        """
+        raise AttributeError("Cannot delete the organizationID attribute")
     
     @property
     def severity(self):
@@ -224,11 +286,13 @@ class Event(object):
         """
         tags accessor
         """
-        return self.__tags
+#         return self.__tags
+        return self.__event[RAW_EVENT.TAGS]
         
     @tags.setter
     def tags(self, tags):
-        self.__tags = tags
+        self.__event[RAW_EVENT.TAGS] = tags
+        
         
     @property
     def title(self):
@@ -268,7 +332,7 @@ class Event(object):
         """
         The timestamp the event was received.
         """
-        return self.__createdAt
+        return self.__receivedAt
     
     @receivedAt.setter
     def receivedAt(self,receivedAt):
@@ -287,12 +351,18 @@ class Event(object):
     
     @staticmethod
     def getEvent():
-        return Event(Event.__DEFAULT_SOURCE,Event.__DEFAULT_FINGERPRINT_FIELDS,Event.__DEFAULT_TITLE)
+        return Event(Event.__DEFAULT_SOURCE,
+                     Event.__DEFAULT_FINGERPRINT_FIELDS,
+                     Event.__DEFAULT_TITLE)
+        
+    def __repr__(self):
+        return self.__str__()
     
+    def __str__(self):
+        return str(self.__event)
     
-    
-    
-    def __eventToJson(self):
+    def eventToJson(self):
+            
         event = {'source': {"type": "host", "ref": self.__source},
                  'sender': {"type": self.__sender, "ref": self.__sender},
                  'properties': {"sender": self.__sender,
@@ -306,7 +376,19 @@ class Event(object):
                  'tags': [self.__source, self.__sender, self.__severity],
                  'fingerprintFields': ['source', 'sender']
                  }
-        return
+        return event
+    
+    def getActiveFields(self):
+        """
+        Extract the active fields from our list of fields
+        """
+        e = {}
+        for f in self.__event.keys():
+            if self.__event[f] != None:
+                e[f] = self.__event[f]
+        return e
+                
+
 
         
 

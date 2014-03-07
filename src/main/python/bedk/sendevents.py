@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from boundary.api.events import createEvent
+from boundary.api.event import createEvent
 
 
 
