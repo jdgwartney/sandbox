@@ -10,10 +10,10 @@ from boundary.api.event import Event
 
 def createEvent(apiHost,
                 apiKey,
-                source,
                 fingerprintFields,
                 title,
                 organizationID,
+                source = {'ref': platform.node(),'type': 'host'},
                 severity=Event.INFO,
                 sender={'ref': platform.node(),'type': 'host'},
                 properties=None,
@@ -41,8 +41,12 @@ def createEvent(apiHost,
     
     print(c.createEvent(e))
     
+    
+def getEvent():
+    pass
+    
 
-__all__ = ['createEvent']
+__all__ = ['createEvent','getEvent']
 
 if __name__ == '__main__':
     createEvent()

@@ -13,7 +13,6 @@ import platform
 
 class TestEventConnection(TestEventAPI):
 
-
     def setUp(self):
         self.organizationID = '3ehRi7uZeeaTN12dErF5XOnRXjC'
         self.apiKey = 'ARI0PzUzWYUo7GG1OxiHmABTpr9'
