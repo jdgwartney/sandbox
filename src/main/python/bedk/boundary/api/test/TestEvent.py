@@ -52,8 +52,9 @@ class TestEvent(TestEventAPI):
         self.assertEqual(self.event.sender,expectedSender,'Check sender')
         
     def testFingerprintFields(self):
-        expectedFingerprintFields = self.getRandomString()
-        self.event.fingerprintFields = expectedFingerprintFields
+        randomString = self.getRandomString()
+        self.event.fingerprintFields = randomString
+        expectedFingerprintFields = [randomString]
         self.assertEqual(self.event.fingerprintFields,expectedFingerprintFields,'Check fingerprintFields')
         
     def testSourceString(self):
@@ -132,6 +133,12 @@ class TestEvent(TestEventAPI):
         self.assertIsNone(e.organizationID)
         self.assertIsNotNone(e.title)
         self.assertEqual(e.source,expectedSource)
+        
+        
+    def testEventDict(self):
+        d = {'title': 'Hello'}
+        ev = Event.eventDict(d)
+
         
         
 #     def testEventDict(self):

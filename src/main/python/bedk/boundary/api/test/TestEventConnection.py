@@ -21,16 +21,23 @@ class TestEventConnection(TestEventAPI):
     def tearDown(self):
         pass
     
-    def testSendEvent(self):
+    def testCreateEvent(self):
         # Create our Boundary Event Connection
         connection = EventConnection(self.apiKey,
                                      self.organizationID)
         event = Event.getDefaultEvent()
-        
-        
+          
+          
         #Send an event to the Boundary Server using the Boundary REST API
         eventID = connection.createEvent(event)
         self.assertIsNotNone(eventID,'Check for returned event ID')
+         
+    def testGetEvent(self):
+        connection = EventConnection(self.apiKey,
+                                     self.organizationID)
+          
+        event = connection.getEvent(213299714)
+        print('event_type {0}, event: {1}'.format(type(event),event))
 
 
 if __name__ == "__main__":

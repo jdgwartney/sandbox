@@ -11,6 +11,7 @@ import json
 import platform
 from datetime import datetime
 from boundary.api.event import Event
+import http.client
 
 class EventConnection(object):
     '''
@@ -30,10 +31,11 @@ class EventConnection(object):
         self.__apiKey = apiKey
         self.__organizationID = organizationID
         # Generate our URI
-        self.__headers = {'Content-Type': 'application/json'}
+        self.__createEventHeaders = {'Content-Type': 'application/json'}
+        self.__getEventHeaders = {'Accept': 'application/json'}
         self.__authorization = HTTPBasicAuth(self.__apiKey, '')
         self.__uri = 'https://{0}/{1}/{2}'.format(self.__apiHost,self.__organizationID,self.__DEFAULT_EVENT_PATH)
-
+        
         
     @property
     def apiHost(self):
@@ -51,28 +53,45 @@ class EventConnection(object):
         """
         return self.__organizationID
 
-    
-
     def createEvent(self,event):
         """
         sendEvent(self,event) -> String
         """
         
-
+        #
+        # Extract fields that have been set
+        #
         e = event.getActiveFields()
-        print(e)
 
         #
         # TODO: What kind of errors can this through?? Add handling for errors
         #
-        r = requests.post(self.__uri,data=json.dumps(e), headers=self.__headers,auth=self.__authorization)
-        print('HTTP Status Code: ' + str(r.status_code))
-        # TODO: Defined constant for HTTP headers like location
-        # The HTTP Response header 'Location'
-        locationHeader = str(r.headers['Location'])
-        eventId = int(locationHeader.split('/',6)[5])
+        r = requests.post(self.__uri,data=json.dumps(e), headers=self.__createEventHeaders,auth=self.__authorization)
+        
+        if r.status_code == http.client.CREATED:
+            # TODO: Defined constant for HTTP headers like location
+            # The HTTP Response header 'Location'
+            locationHeader = str(r.headers['Location'])
+            eventId = int(locationHeader.split('/',6)[5])
+        else:
+            print('HTTP Status Code: ' + str(r.status_code))
+            eventId = None
 
         return eventId
+    
+    def getEvent(self,eventId):
+        """
+        """
+        # TODO: checks to ensure event ID is a number
+        uri = self.__uri + '/' + str(eventId)
+        print('uri: ' + uri)
+        
+        r = requests.get(uri,headers=self.__getEventHeaders, auth=self.__authorization)
+        print('HTTP Status Code: ' + str(r.status_code))
+        print(r.text)
+        e = json.loads(r.text)
+        return Event.toEvent(e)
+
 
     
         

@@ -42,8 +42,11 @@ def createEvent(apiHost,
     print(c.createEvent(e))
     
     
-def getEvent():
-    pass
+def getEvent(apiHost,apiKey,eventId):
+    c = EventConnection(apiKey=apiKey,apiHost=apiHost)
+    
+    event = c.getEvent(eventId)
+    return event
     
 
 __all__ = ['createEvent','getEvent']
