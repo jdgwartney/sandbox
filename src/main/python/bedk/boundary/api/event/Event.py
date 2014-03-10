@@ -369,6 +369,12 @@ class Event(object):
                      Event.__DEFAULT_FINGERPRINT_FIELDS,
                      Event.__DEFAULT_TITLE)
         
+    @staticmethod
+    def toEvent(eventDict):
+        event = Event.getDefaultEvent()
+        event.__event = eventDict
+        return event
+        
     def __repr__(self):
         return self.__str__()
     
