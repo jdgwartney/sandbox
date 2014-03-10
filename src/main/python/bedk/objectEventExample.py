@@ -14,10 +14,15 @@ def main():
     event = Event.getDefaultEvent()
     
     event.message = 'Hello World'
+    event.title = 'Boundary Object Oriented Event API'
     
     eventId = connection.createEvent(event)
     
     print('event id: ' + str(eventId))
+    
+    newEvent = connection.getEvent(eventId)
+    
+    print('event: ' + newEvent)
 
 if __name__ == '__main__':
     main()
