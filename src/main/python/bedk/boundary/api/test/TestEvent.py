@@ -8,6 +8,8 @@ import unittest
 
 from boundary.api.event import Event
 from boundary.api.test import TestEventAPI
+import json
+import platform
 
 """
 Unit tests or boundary.api.Event.Event
@@ -16,7 +18,7 @@ class TestEvent(TestEventAPI):
 
 
     def setUp(self):
-        self.event = Event.getEvent()
+        self.event = Event.getDefaultEvent()
         pass
 
     def tearDown(self):
@@ -26,7 +28,7 @@ class TestEvent(TestEventAPI):
         e = Event(source='MySource',fingerprintFields='@title',title='MyTitle')
         self.assertEqual(e.severity,e.INFO,'Check default value of severity')
         self.assertEqual(e.organizationID,None,'Check default value of organizationID')
-        self.assertEqual(e.sender,None,'Check default value of sender')
+        self.assertEqual(e.sender,{ "ref": platform.node(),"type": "host"},'Check default value of sender')
         self.assertEqual(e.properties,None,'Check default value of properties')
                 
     def testOrganizationID(self):
@@ -40,12 +42,12 @@ class TestEvent(TestEventAPI):
         self.assertEqual(self.event.severity,expectedSeverity,'Check severity')
         
     def testSource(self):
-        expectedSource = self.getRandomString()
+        expectedSource = {'ref': self.getRandomString(),'type': 'random source string'}
         self.event.source = expectedSource
         self.assertEqual(self.event.source,expectedSource,'Check source')
         
     def testSender(self):
-        expectedSender = self.getRandomString()
+        expectedSender = {'ref': self.getRandomString(), 'type': 'random sender string'}
         self.event.sender = expectedSender
         self.assertEqual(self.event.sender,expectedSender,'Check sender')
         
@@ -53,6 +55,29 @@ class TestEvent(TestEventAPI):
         expectedFingerprintFields = self.getRandomString()
         self.event.fingerprintFields = expectedFingerprintFields
         self.assertEqual(self.event.fingerprintFields,expectedFingerprintFields,'Check fingerprintFields')
+        
+    def testSourceString(self):
+        myHost = 'myHost'
+        expectedSource = {'ref': myHost,'type': 'host'}
+        self.event.source = myHost
+        self.assertEqual(self.event.source,expectedSource)
+        
+    def testSourceDict(self):
+        expectedSource = {'ref': 'green','type': 'blue'}
+        self.event.source = expectedSource
+        self.assertEqual(self.event.source, expectedSource)
+        
+    def testSenderString(self):
+        myHost = 'myHost'
+        expectedSender = {'ref': myHost,'type': 'host'}
+        self.event.sender = myHost
+        self.assertEqual(self.event.sender,expectedSender)
+        
+    def testSenderDict(self):
+        expectedSender = {'ref': 'yellow','type': 'magenta'}
+        self.event.sender = expectedSender
+        self.assertEqual(self.event.sender, expectedSender)
+
         
     def testTagsString(self):
         expectedTags = self.getRandomString()
@@ -101,13 +126,41 @@ class TestEvent(TestEventAPI):
 
         
     def testEventDefaults(self):
-        expectedSource = 'Boundary Event API Testing'
-        e = Event.getEvent()
+        expectedSource = { "ref": platform.node(),"type": "host"}
+        e = Event.getDefaultEvent()
         
         self.assertIsNone(e.organizationID)
-        self.assertIsNone(e.title)
+        self.assertIsNotNone(e.title)
         self.assertEqual(e.source,expectedSource)
         
+        
+#     def testEventDict(self):
+#         # Field values
+#         title = 'Boundary API Event Example'
+#         tags = ['example']
+#         fingerprintFields = ['@message']
+#         source = {'ref': 'myHost','type': 'host'}
+#         message = 'test'
+#         
+#         # Create an example dictionary
+#         example = {"title": title,
+#                    "tags": tags,
+#                    "fingerprintFields": fingerprintFields,
+#                    "source": source,
+#                    "message": message
+#                    }
+#         expectedJSON = json.dumps(example)
+#         event = Event(title=title,
+#                       tags=tags,
+#                       fingerprintFields=fingerprintFields,
+#                       source=source,
+#                       message=message)
+#         eventJSON  = json.dumps(event.getActiveFields())
+# 
+#         print('event: ' + str(type(eventJSON)))
+#         print('expected: ' + str(type(expectedJSON)))
+#         self.assertEqual(eventJSON,expectedJSON)
+         
 
 
 

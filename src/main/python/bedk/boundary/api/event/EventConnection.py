@@ -52,34 +52,27 @@ class EventConnection(object):
         return self.__organizationID
 
     
-    def getEvent(self):
-        myMessage = str('test @' + str(datetime.now()))
-        myTitle = "Boundary API Event Test"
-        myHost = platform.node()
-        event = {"title": myTitle,
-                 "message": myMessage,
-                 "tags": ["example", "test", "stuff"],
-                 "fingerprintFields": ["@message"],
-                 "source": { "ref": myHost,"type": "host"}
-                 }
-        return event
 
     def createEvent(self,event):
         """
         sendEvent(self,event) -> String
         """
+        
+
+        e = event.getActiveFields()
+        print(e)
 
         #
         # TODO: What kind of errors can this through?? Add handling for errors
         #
-        r = requests.post(self.__uri,data=json.dumps(event.getActiveFields()), headers=self.__headers,auth=self.__authorization)
+        r = requests.post(self.__uri,data=json.dumps(e), headers=self.__headers,auth=self.__authorization)
         print('HTTP Status Code: ' + str(r.status_code))
         # TODO: Defined constant for HTTP headers like location
         # The HTTP Response header 'Location'
-        location = str(r.headers['Location'])
-        eventID = location.split('/',6)[5]
+        locationHeader = str(r.headers['Location'])
+        eventId = int(locationHeader.split('/',6)[5])
 
-        return eventID
+        return eventId
 
     
         

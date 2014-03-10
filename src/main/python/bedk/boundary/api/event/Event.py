@@ -5,6 +5,7 @@ Created on Mar 4, 2014
 '''
 from enum import Enum
 import json
+import platform
 
 #
 # TODO: Rethink the use of the enumerated types in the Event class for identifying fields
@@ -103,8 +104,8 @@ class Event(object):
     #
     __DEFAULT_ORGANIZATION_ID = None
     __DEFAULT_SEVERITY = SEVERITY.INFO.value
-    __DEFAULT_SOURCE = 'Boundary Event API Testing'
-    __DEFAULT_SENDER = None
+    __DEFAULT_SOURCE = { "ref": platform.node(),"type": "host"}
+    __DEFAULT_SENDER = { "ref": platform.node(),"type": "host"}
     __DEFAULT_PROPERTIES = None
     __DEFAULT_STATUS = STATUS.OK.value
     __DEFAULT_FINGERPRINT_FIELDS = ['@title']
@@ -145,18 +146,18 @@ class Event(object):
         # Create a dictionary of the values
         #
         self.__event ={}
-        self.__event[RAW_EVENT.ORGANIZATION_ID.value] = organizationID
-        self.__event[RAW_EVENT.SEVERITY.value] = severity
-        self.__event[RAW_EVENT.SOURCE.value] = source
-        self.__event[RAW_EVENT.SENDER.value] = sender
-        self.__event[RAW_EVENT.PROPERTIES.value] = properties
-        self.__event[RAW_EVENT.STATUS.value] = status
-        self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value] = fingerprintFields
-        self.__event[RAW_EVENT.TAGS.value] = tags
-        self.__event[RAW_EVENT.TITLE.value] = title
-        self.__event[RAW_EVENT.MESSAGE.value] = message
-        self.__event[RAW_EVENT.CREATED_AT.value] = createdAt
-        self.__event[RAW_EVENT.RECEIVED_AT.value] = receivedAt
+        self.organizationID = organizationID
+        self.severity = severity
+        self.source = source
+        self.sender = sender
+        self.properties = properties
+        self.status = status
+        self.fingerprintFields = fingerprintFields
+        self.tags = tags
+        self.title = title
+        self.message = message
+        self.createdAt = createdAt
+        self.receivedAt = receivedAt
    
     @staticmethod
     def validateOrganizationalID(organizationID):
@@ -187,7 +188,6 @@ class Event(object):
         
         The associated organization id for this event. If not specified, organization id will be populated from the URI.
         """
-        
         self.__event[RAW_EVENT.ORGANIZATION_ID.value] = organizationID
 # TODO: Additional validation of organization ID
 #         if (Event.validateOrganizationalID(organizationID) == True):
@@ -221,10 +221,26 @@ class Event(object):
     def source(self):
         return self.__event[RAW_EVENT.SOURCE.value]
 
+    def __convertToSource(self,value):
+        """
+        
+        Help function that takes various data types and converts to Event Source type
+        """
+        # TODO: How to handle if the call just passes in a single string
+        #       The string value passed in can be REF but what is the type??
+        # TODO: How to handle int, float, complex??
+        if isinstance(value,str):
+            theSource = {'ref':value,'type': 'host'}
+        else:
+            theSource = value
+        return theSource
+
     
     @source.setter
     def source(self,source):
-        self.__event[RAW_EVENT.SOURCE.value] = source
+        """
+        """
+        self.__event[RAW_EVENT.SOURCE.value] = self.__convertToSource(source)
     
     @property
     def sender(self):
@@ -237,7 +253,7 @@ class Event(object):
     
     @sender.setter
     def sender(self,sender):
-        self.__event[RAW_EVENT.SENDER.value] = sender
+        self.__event[RAW_EVENT.SENDER.value] = self.__convertToSource(sender)
         
     @property
     def properties(self):
@@ -273,7 +289,11 @@ class Event(object):
         from the properties object. Each field must have a non-null,
         non-empty field value with a basic type (string, number, or bool).
         """
-        self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value] = fingerprintFields
+        if isinstance(fingerprintFields,str):
+            fp = [fingerprintFields]
+        else:
+            fp = fingerprintFields
+        self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value] = fp
         
     @property
     def tags(self):
@@ -357,7 +377,7 @@ class Event(object):
         
     def getActiveFields(self):
         """
-        Extract the active fields from our list of fields
+        Extract the active fields from our list of fields 
         """
         e = {}
         #
@@ -367,11 +387,11 @@ class Event(object):
         e[RAW_EVENT.FINGERPRINT_FIELDS.value] = self.__event[RAW_EVENT.FINGERPRINT_FIELDS.value]
         e[RAW_EVENT.TITLE.value] = self.__event[RAW_EVENT.TITLE.value]
         
-        for f in self.__event.keys():
-            if self.__event[f] != None:
-                e[f] = self.__event[f]
+#         for f in self.__event.keys():
+#             if self.__event[f] != None:
+#                 e[f] = self.__event[f]
                 
-        print(json.dumps(e))
+#         print(json.dumps(e))
         return e
 
 
