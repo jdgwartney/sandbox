@@ -137,7 +137,8 @@ class TestEvent(TestEventAPI):
         
     def testEventDict(self):
         d = {'title': 'Hello'}
-        ev = Event.eventDict(d)
+        event = Event.toEvent(d)
+        print(event)
 
         
         

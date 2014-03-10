@@ -84,7 +84,6 @@ class EventConnection(object):
         """
         # TODO: checks to ensure event ID is a number
         uri = self.__uri + '/' + str(eventId)
-        print('uri: ' + uri)
         
         r = requests.get(uri,headers=self.__getEventHeaders, auth=self.__authorization)
         print('HTTP Status Code: ' + str(r.status_code))
