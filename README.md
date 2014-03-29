@@ -4,6 +4,6 @@ sandbox
 John David Gwartney Sandbox
 
 
-# Step One
-# Step Two
-# Step Three
+1. Step One
+1. Step Two
+1. Step Three
